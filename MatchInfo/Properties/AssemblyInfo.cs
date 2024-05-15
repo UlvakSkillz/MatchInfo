@@ -3,7 +3,7 @@ using MelonLoader;
 using System.Reflection;
 using System.Runtime.InteropServices;
 // ...
-[assembly: MelonInfo(typeof(main), "MatchInfo", "1.1.4", "UlvakSkillz")]
+[assembly: MelonInfo(typeof(main), "MatchInfo", "1.2.0", "UlvakSkillz")]
 [assembly: MelonGame("Buckethead Entertainment", "RUMBLE")]
 
 // General Information about an assembly is controlled through the following

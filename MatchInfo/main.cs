@@ -3,6 +3,7 @@ using RUMBLE.Managers;
 using RUMBLE.Networking.MatchFlow;
 using RumbleModdingAPI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using TMPro;
@@ -12,7 +13,10 @@ namespace MatchInfo
 {
     public class main : MelonMod
     {
-        private string FILEPATH = @"UserData\MatchInfo\MatchInfo.txt";
+        private string FILEPATH = @"UserData\MatchInfo";
+        private string FILENAME = @"MatchInfo.txt";
+        private string BACKUPFILENAME = @"MatchInfo_Backup";
+        private string SETTINGFILENAME = @"Settings.txt";
         private List<string> fileText = new List<string>();
         private bool sceneChanged = false;
         private string currentScene = "";
@@ -29,17 +33,22 @@ namespace MatchInfo
         private PlayerManager playerManager;
         private MatchHandler matchHandler;
         private int playerFileSpot = 0;
+        private bool showWinRate = true;
+        private bool showWinLoss = true;
+        private bool backedUp = false;
+        bool newSettingsFile = false;
 
-        public override void OnEarlyInitializeMelon()
+        public override void OnLateInitializeMelon()
         {
-            string[] tempStringList = ReadFileText(FILEPATH);
-            foreach (string tempString in tempStringList) { fileText.Add(tempString); }
+            MelonCoroutines.Start(CheckIfFileExists(FILEPATH, FILENAME));
         }
-
-        public override void OnApplicationQuit() { File.WriteAllLines(FILEPATH, fileText); }
 
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
+            if (init)
+            {
+                ReadSettingsFile();
+            }
             currentScene = sceneName;
             sceneChanged = true;
         }
@@ -52,10 +61,28 @@ namespace MatchInfo
                 {
                     if ((currentScene == "Gym") && (!init))
                     {
+                        if (!backedUp)
+                        {
+                            MelonLogger.Msg("Backing up File 2 -> 3");
+                            File.Copy($"{FILEPATH}\\Backups\\{BACKUPFILENAME}2.txt", $"{FILEPATH}\\Backups\\{BACKUPFILENAME}3.txt", true);
+                            MelonLogger.Msg("Backing up File 1 -> 2");
+                            File.Copy($"{FILEPATH}\\Backups\\{BACKUPFILENAME}1.txt", $"{FILEPATH}\\Backups\\{BACKUPFILENAME}2.txt", true);
+                            MelonLogger.Msg("Backing up File MatchInfo.txt -> 1");
+                            File.Copy($"{FILEPATH}\\{FILENAME}", $"{FILEPATH}\\Backups\\{BACKUPFILENAME}1.txt", true);
+                            backedUp = true;
+                        }
+                        if (newSettingsFile)
+                        {
+                            string[] settingsFileText = new string[2];
+                            settingsFileText[0] = "Show Gym Info: True";
+                            settingsFileText[1] = "Show Win/Loss in Match: True";
+                            File.WriteAllLines($"{FILEPATH}\\{SETTINGFILENAME}", settingsFileText);
+                            newSettingsFile = false;
+                        }
                         if (waitedTicks == 120)
                         {
                             //Initialization
-                            playerManager = Calls.Managers.GetPlayerManager();
+                            playerManager = PlayerManager.instance;
                             matchInfoGameObject = new GameObject();
                             matchInfoGameObject.name = "MatchInfoMod";
                             matchInfoGameObject.SetActive(false);
@@ -175,7 +202,8 @@ namespace MatchInfo
                             gymMatchInfoWinsGameObject.transform.localPosition = new Vector3(0.0334f, -0.6f, -0.0012f);
                             gymMatchInfoLossesGameObject.transform.localPosition = new Vector3(0.0334f, -0.9f, -0.0012f);
                             gymMatchInfoWinPercentGameObject.transform.localPosition = new Vector3(0.0334f, -1.2f, -0.0012f);
-
+                            gymMatchInfoGameObject.SetActive(false);
+                            
                             GameObject.DontDestroyOnLoad(matchInfoGameObject);
                             GameObject.DontDestroyOnLoad(gymMatchInfoGameObject);
                             init = true;
@@ -189,8 +217,12 @@ namespace MatchInfo
                     if (currentScene == "Gym")
                     {
                         matchInfoGameObject.SetActive(false);
-                        CountWinLoss();
                         gymMatchInfoGameObject.SetActive(true);
+                        CountWinLoss();
+                        if (!showWinRate)
+                        {
+                            gymMatchInfoGameObject.SetActive(false);
+                        }
                     }
                     //not gym scene change
                     else
@@ -200,6 +232,7 @@ namespace MatchInfo
                     //Matchmaking Scene Change
                     if ((currentScene == "Map0") || (currentScene == "Map1"))
                     {
+                        matchInfoGameObject.SetActive(true);
                         try
                         {
                             if (currentScene == "Map0") { matchHandler = Calls.GameObjects.Map0.Logic.MatchHandler.GetGameObject().GetComponent<MatchHandler>(); }
@@ -238,14 +271,24 @@ namespace MatchInfo
                                 fileText.Add("0");
                                 playerFileSpot = fileText.Count - 3;
                             }
+                            player1MatchWinsGameObject.SetActive(true);
+                            player2MatchWinsGameObject.SetActive(true);
                             player1MatchWinsComponent.text = fileText[playerFileSpot + 2] + " Wins";
                             player2MatchWinsComponent.text = fileText[playerFileSpot + 1] + " Wins";
+                            if (!showWinLoss)
+                            {
+                                player1MatchWinsGameObject.SetActive(false);
+                                player2MatchWinsGameObject.SetActive(false);
+                            }
                             matchActive = true;
                             ranWinLoss = false;
+                            hideTime = DateTime.Now.AddSeconds(7);
+                            textActive = true;
                         }
-                        matchInfoGameObject.SetActive(true);
-                        hideTime = DateTime.Now.AddSeconds(7);
-                        textActive = true;
+                        else
+                        {
+                            MelonCoroutines.Start(OnePlayerFound());
+                        }
                     }
                 }
                 catch (Exception e) { MelonLogger.Msg(e); return; }
@@ -320,9 +363,19 @@ namespace MatchInfo
                         player2BPComponent.text = playerManager.AllPlayers[0].Data.GeneralData.BattlePoints.ToString() + " BP";
                         player1BPComponent.text = playerManager.AllPlayers[1].Data.GeneralData.BattlePoints.ToString() + " BP";
                         ranWinLoss = true;
+                        File.WriteAllLines($"{FILEPATH}\\{FILENAME}", fileText);
                     }
                 } catch { return; }
             }
+        }
+
+        public IEnumerator OnePlayerFound()
+        {
+            for (int i = 0; i < 200; i++)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+            matchInfoGameObject.SetActive(false);
         }
 
         public void CountWinLoss()
@@ -340,20 +393,91 @@ namespace MatchInfo
             gymMatchInfoWinPercentComponent.text = "Win Rate: " + ((float)(int)(wins / (float)(wins + losses) * 10000) / 100).ToString() + "%";
             if (wins + losses == 0) { gymMatchInfoWinPercentComponent.text = "Win Rate: N/A"; }
         }
+
+        public IEnumerator CheckIfFileExists(string filePath, string fileName)
+        {
+            bool newMatchInfoFile = false;
+            if ((!File.Exists($"{filePath}\\{fileName}")) || (!File.Exists($"{filePath}\\{SETTINGFILENAME}")) || (!File.Exists($"{filePath}\\Backups\\{BACKUPFILENAME}1.txt")) || (!File.Exists($"{filePath}\\Backups\\{BACKUPFILENAME}2.txt")) || (!File.Exists($"{filePath}\\Backups\\{BACKUPFILENAME}3.txt")))
+            {
+                if (!Directory.Exists(filePath))
+                {
+                    MelonLogger.Msg($"Folder Not Found, Creating Folder: {filePath}");
+                    Directory.CreateDirectory(filePath);
+                }
+                if (!File.Exists($"{filePath}\\{fileName}"))
+                {
+                    MelonLogger.Msg($"Creating File {fileName}");
+                    File.Create($"{filePath}\\{fileName}");
+                    newMatchInfoFile = true;
+                }
+                if (!File.Exists($"{filePath}\\{SETTINGFILENAME}"))
+                {
+                    newSettingsFile = true;
+                    MelonLogger.Msg($"Creating File {SETTINGFILENAME}");
+                    File.Create($"{filePath}\\{SETTINGFILENAME}");
+                }
+                if (!Directory.Exists(filePath))
+                {
+                    MelonLogger.Msg($"Folder Not Found, Creating Folder: {filePath}");
+                    Directory.CreateDirectory(filePath);
+                }
+                if (!Directory.Exists($"{filePath}\\Backups"))
+                {
+                    MelonLogger.Msg($"Folder Not Found, Creating Folder: {filePath}\\Backups");
+                    Directory.CreateDirectory($"{filePath}\\Backups");
+                }
+                if (!File.Exists($"{filePath}\\Backups\\{BACKUPFILENAME}1.txt"))
+                {
+                    MelonLogger.Msg($"Creating File {BACKUPFILENAME}1.txt");
+                    File.Create($"{filePath}\\Backups\\{BACKUPFILENAME}1.txt");
+                }
+                if (!File.Exists($"{filePath}\\Backups\\{BACKUPFILENAME}2.txt"))
+                {
+                    MelonLogger.Msg($"Creating File {BACKUPFILENAME}2.txt");
+                    File.Create($"{filePath}\\Backups\\{BACKUPFILENAME}2.txt");
+                }
+                if (!File.Exists($"{filePath}\\Backups\\{BACKUPFILENAME}3.txt"))
+                {
+                    MelonLogger.Msg($"Creating File {BACKUPFILENAME}3.txt");
+                    File.Create($"{filePath}\\Backups\\{BACKUPFILENAME}3.txt");
+                }
+            }
+            for (int i = 0; i < 60; i++) { yield return new WaitForFixedUpdate(); }
+            if (!newSettingsFile)
+            {
+                ReadSettingsFile();
+            }
+            if (!newMatchInfoFile)
+            {
+                string[] tempStringList = ReadFileText(FILEPATH, FILENAME);
+                foreach (string tempString in tempStringList) { fileText.Add(tempString); }
+            }
+            yield return null;
+        }
+
+        public void ReadSettingsFile()
+        {
+            try
+            {
+                string[] tempSettingsFileText = ReadFileText(FILEPATH, SETTINGFILENAME);
+                showWinRate = !tempSettingsFileText[0].ToLower().Contains("false");
+                showWinLoss = !tempSettingsFileText[1].ToLower().Contains("false");
+            }
+            catch (Exception e)
+            {
+                MelonLogger.Error("Error Reading Settings File: " + e);
+            }
+        }
         
         //Reads the File and Returns the Lines
-        public static string[] ReadFileText(string inputFile)
+        public static string[] ReadFileText(string filePath, string fileName)
         {
-            if (File.Exists(inputFile))
+            try
             {
-                try
-                {
-                    List<string> output = new List<string>();
-                    return File.ReadAllLines(inputFile);
-                }
-                catch (Exception e) { MelonLogger.Error(e); }
+                List<string> output = new List<string>();
+                return File.ReadAllLines($"{filePath}\\{fileName}");
             }
-            else { MelonLogger.Error($"File not Found: Check Game Folder for {inputFile}"); }
+            catch (Exception e) { MelonLogger.Error(e); }
             return null;
         }
     }
