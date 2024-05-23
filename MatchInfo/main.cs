@@ -92,7 +92,7 @@ namespace MatchInfo
                             player1GameObject.name = "Player1Name";
 
                             player1Component = player1GameObject.GetComponent<TextMeshPro>();
-                            player1Component.text = "Name";
+                            player1Component.text = "name";
                             player1Component.fontSize = 5f;
                             player1Component.color = new Color(1, 1, 1, 1);
                             player1Component.outlineColor = new Color(0, 0, 0, 0.5f);
@@ -249,16 +249,32 @@ namespace MatchInfo
                             matchInfoGameObject.transform.rotation = Quaternion.Euler(0, 90, 0);
                         }
                         player2Component.text = playerManager.AllPlayers[0].Data.GeneralData.PublicUsername;
+                        if (playerManager.AllPlayers[0].Data.GeneralData.InternalUsername == "5832566FD2375E31")
+                        {
+                            player2Component.text = "<#990099>U<#ff00ff>l<#ff66ff>v<#cc66ff>a<#9966ff>k<#6666ff>S<#3366ff>k<#6699ff>i<#809fff>l<#b3c6ff>l<#e6ecff>z";
+                        }
                         player2BPComponent.text = playerManager.AllPlayers[0].Data.GeneralData.BattlePoints.ToString() + " BP";
                         if (playerManager.AllPlayers.Count > 1)
                         {
                             player1Component.text = playerManager.AllPlayers[1].Data.GeneralData.PublicUsername;
+                            if (playerManager.AllPlayers[1].Data.GeneralData.InternalUsername == "5832566FD2375E31")
+                            {
+                                player1Component.text = "<#990099>U<#ff00ff>l<#ff66ff>v<#cc66ff>a<#9966ff>k<#6666ff>S<#3366ff>k<#6699ff>i<#809fff>l<#b3c6ff>l<#e6ecff>z";
+                            }
                             player1BPComponent.text = playerManager.AllPlayers[1].Data.GeneralData.BattlePoints.ToString() + " BP";
                             bool playerFound = false;
                             for (int spot = 0; spot < fileText.Count; spot += 3)
                             {
-                                if (fileText[spot] == playerManager.AllPlayers[1].Data.GeneralData.InternalUsername)
+                                if (fileText[spot].Contains(playerManager.AllPlayers[1].Data.GeneralData.InternalUsername))
                                 {
+                                    if (fileText[spot] == playerManager.AllPlayers[1].Data.GeneralData.InternalUsername)
+                                    {
+                                        fileText[spot] += " - " + playerManager.AllPlayers[1].Data.GeneralData.PublicUsername;
+                                    }
+                                    else if (!fileText[spot].Contains(playerManager.AllPlayers[1].Data.GeneralData.PublicUsername))
+                                    {
+                                        fileText[spot] = playerManager.AllPlayers[1].Data.GeneralData.InternalUsername + " - " + playerManager.AllPlayers[1].Data.GeneralData.PublicUsername;
+                                    }
                                     playerFileSpot = spot;
                                     playerFound = true;
                                     break;
@@ -266,7 +282,7 @@ namespace MatchInfo
                             }
                             if (!playerFound)
                             {
-                                fileText.Add(playerManager.AllPlayers[1].Data.GeneralData.InternalUsername);
+                                fileText.Add(playerManager.AllPlayers[1].Data.GeneralData.InternalUsername + " - " + playerManager.AllPlayers[1].Data.GeneralData.PublicUsername);
                                 fileText.Add("0");
                                 fileText.Add("0");
                                 playerFileSpot = fileText.Count - 3;
@@ -296,16 +312,7 @@ namespace MatchInfo
             }
             if ((textActive) && (hideTime <= DateTime.Now))
             {
-                if (currentScene == "Map0")
-                {
-                    matchInfoGameObject.transform.position = new Vector3(-1, -0.5f, 20.5f);
-                    matchInfoGameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
-                }
-                else if (currentScene == "Map1")
-                {
-                    matchInfoGameObject.transform.position = new Vector3(0, 5.25f, 11);
-                    matchInfoGameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
-                }
+                MoveSign();
                 textActive = false;
             }
             if (matchActive)
@@ -366,6 +373,20 @@ namespace MatchInfo
                         File.WriteAllLines($"{FILEPATH}\\{FILENAME}", fileText);
                     }
                 } catch { return; }
+            }
+        }
+
+        public void MoveSign()
+        {
+            if (currentScene == "Map0")
+            {
+                matchInfoGameObject.transform.position = new Vector3(-1, -0.5f, 20.5f);
+                matchInfoGameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+            }
+            else if (currentScene == "Map1")
+            {
+                matchInfoGameObject.transform.position = new Vector3(0, 5.25f, 11);
+                matchInfoGameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
             }
         }
 

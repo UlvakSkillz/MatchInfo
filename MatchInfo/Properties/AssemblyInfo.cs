@@ -1,10 +1,14 @@
 ﻿using MatchInfo; // The namespace of your mod class
 using MelonLoader;
+using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 // ...
-[assembly: MelonInfo(typeof(main), "MatchInfo", "1.2.0", "UlvakSkillz")]
+[assembly: MelonInfo(typeof(main), "MatchInfo", "1.3.1", "UlvakSkillz")]
 [assembly: MelonGame("Buckethead Entertainment", "RUMBLE")]
+[assembly: MelonColor(ConsoleColor.Magenta)]
+[assembly: MelonAuthorColor(ConsoleColor.Magenta)]
+[assembly: VerifyLoaderVersion(0, 5, 7)]
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information

@@ -5,7 +5,6 @@ C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\BucketheadEntertainmen
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\Il2Cppmscorlib.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\MelonLoader.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\RUMBLE.Runtime.dll
-C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\RumbleModdingAPI.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnhollowerBaseLib.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\Unity.TextMeshPro.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnityEngine.CoreModule.dll
@@ -123,3 +122,4 @@ C:\Users\austi\source\repos\MatchInfo\MatchInfo\obj\Debug\MatchInfo.csproj.CopyC
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\obj\Debug\MatchInfo.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\obj\Debug\MatchInfo.pdb
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\obj\Debug\MatchInfo.csproj.AssemblyReference.cache
+C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\RumbleModdingAPI.dll
