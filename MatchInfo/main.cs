@@ -1,12 +1,12 @@
 ﻿using MelonLoader;
-using RUMBLE.Managers;
-using RUMBLE.Networking.MatchFlow;
+using Il2CppRUMBLE.Managers;
+using Il2CppRUMBLE.Networking.MatchFlow;
 using RumbleModdingAPI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using TMPro;
+using Il2CppTMPro;
 using UnityEngine;
 
 namespace MatchInfo
@@ -63,11 +63,11 @@ namespace MatchInfo
                     {
                         if (!backedUp)
                         {
-                            MelonLogger.Msg("Backing up File 2 -> 3");
+                            Log("Backing up File 2 -> 3");
                             File.Copy($"{FILEPATH}\\Backups\\{BACKUPFILENAME}2.txt", $"{FILEPATH}\\Backups\\{BACKUPFILENAME}3.txt", true);
-                            MelonLogger.Msg("Backing up File 1 -> 2");
+                            Log("Backing up File 1 -> 2");
                             File.Copy($"{FILEPATH}\\Backups\\{BACKUPFILENAME}1.txt", $"{FILEPATH}\\Backups\\{BACKUPFILENAME}2.txt", true);
-                            MelonLogger.Msg("Backing up File MatchInfo.txt -> 1");
+                            Log("Backing up File MatchInfo.txt -> 1");
                             File.Copy($"{FILEPATH}\\{FILENAME}", $"{FILEPATH}\\Backups\\{BACKUPFILENAME}1.txt", true);
                             backedUp = true;
                         }
@@ -207,7 +207,7 @@ namespace MatchInfo
                             GameObject.DontDestroyOnLoad(matchInfoGameObject);
                             GameObject.DontDestroyOnLoad(gymMatchInfoGameObject);
                             init = true;
-                            MelonLogger.Msg("Initialized");
+                            Log("Initialized");
                         }
                         else { waitedTicks++; }
                     }
@@ -307,7 +307,7 @@ namespace MatchInfo
                         }
                     }
                 }
-                catch (Exception e) { MelonLogger.Msg(e); return; }
+                catch { return; }
                 sceneChanged = false;
             }
             if ((textActive) && (hideTime <= DateTime.Now))
@@ -422,44 +422,44 @@ namespace MatchInfo
             {
                 if (!Directory.Exists(filePath))
                 {
-                    MelonLogger.Msg($"Folder Not Found, Creating Folder: {filePath}");
+                    Log($"Folder Not Found, Creating Folder: {filePath}");
                     Directory.CreateDirectory(filePath);
                 }
                 if (!File.Exists($"{filePath}\\{fileName}"))
                 {
-                    MelonLogger.Msg($"Creating File {fileName}");
+                    Log($"Creating File {fileName}");
                     File.Create($"{filePath}\\{fileName}");
                     newMatchInfoFile = true;
                 }
                 if (!File.Exists($"{filePath}\\{SETTINGFILENAME}"))
                 {
                     newSettingsFile = true;
-                    MelonLogger.Msg($"Creating File {SETTINGFILENAME}");
+                    Log($"Creating File {SETTINGFILENAME}");
                     File.Create($"{filePath}\\{SETTINGFILENAME}");
                 }
                 if (!Directory.Exists(filePath))
                 {
-                    MelonLogger.Msg($"Folder Not Found, Creating Folder: {filePath}");
+                    Log($"Folder Not Found, Creating Folder: {filePath}");
                     Directory.CreateDirectory(filePath);
                 }
                 if (!Directory.Exists($"{filePath}\\Backups"))
                 {
-                    MelonLogger.Msg($"Folder Not Found, Creating Folder: {filePath}\\Backups");
+                    Log($"Folder Not Found, Creating Folder: {filePath}\\Backups");
                     Directory.CreateDirectory($"{filePath}\\Backups");
                 }
                 if (!File.Exists($"{filePath}\\Backups\\{BACKUPFILENAME}1.txt"))
                 {
-                    MelonLogger.Msg($"Creating File {BACKUPFILENAME}1.txt");
+                    Log($"Creating File {BACKUPFILENAME}1.txt");
                     File.Create($"{filePath}\\Backups\\{BACKUPFILENAME}1.txt");
                 }
                 if (!File.Exists($"{filePath}\\Backups\\{BACKUPFILENAME}2.txt"))
                 {
-                    MelonLogger.Msg($"Creating File {BACKUPFILENAME}2.txt");
+                    Log($"Creating File {BACKUPFILENAME}2.txt");
                     File.Create($"{filePath}\\Backups\\{BACKUPFILENAME}2.txt");
                 }
                 if (!File.Exists($"{filePath}\\Backups\\{BACKUPFILENAME}3.txt"))
                 {
-                    MelonLogger.Msg($"Creating File {BACKUPFILENAME}3.txt");
+                    Log($"Creating File {BACKUPFILENAME}3.txt");
                     File.Create($"{filePath}\\Backups\\{BACKUPFILENAME}3.txt");
                 }
             }
@@ -493,13 +493,14 @@ namespace MatchInfo
         //Reads the File and Returns the Lines
         public static string[] ReadFileText(string filePath, string fileName)
         {
-            try
-            {
-                List<string> output = new List<string>();
-                return File.ReadAllLines($"{filePath}\\{fileName}");
-            }
+            try { return File.ReadAllLines($"{filePath}\\{fileName}"); }
             catch (Exception e) { MelonLogger.Error(e); }
             return null;
+        }
+
+        public static void Log(string msg)
+        {
+            MelonLogger.Msg(msg);
         }
     }
 }
