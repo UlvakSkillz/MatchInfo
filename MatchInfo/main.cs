@@ -31,7 +31,8 @@ namespace MatchInfo
         private bool matchActive = false;
         private bool ranWinLoss = true;
         private PlayerManager playerManager;
-        private MatchHandler matchHandler;
+        private GameObject MatchSlabOne;
+        TextMeshPro Slab1Text, Slab2Text;
         private int playerFileSpot = 0;
         private bool showWinRate = true;
         private bool showWinLoss = true;
@@ -223,6 +224,7 @@ namespace MatchInfo
                         {
                             gymMatchInfoGameObject.SetActive(false);
                         }
+                        matchActive = false;
                     }
                     //not gym scene change
                     else
@@ -235,8 +237,18 @@ namespace MatchInfo
                         matchInfoGameObject.SetActive(true);
                         try
                         {
-                            if (currentScene == "Map0") { matchHandler = Calls.GameObjects.Map0.Logic.MatchHandler.GetGameObject().GetComponent<MatchHandler>(); }
-                            else if (currentScene == "Map1") { matchHandler = Calls.GameObjects.Map1.Logic.MatchHandler.GetGameObject().GetComponent<MatchHandler>(); }
+                            if (currentScene == "Map0")
+                            {
+                                MatchSlabOne = Calls.GameObjects.Map0.Logic.MatchSlabOne.MatchSlab.SlabBuddyMatchVariant.MatchForm.MatchFormCanvas.GetGameObject();
+                                Slab1Text = Calls.GameObjects.Map0.Logic.MatchSlabOne.MatchSlab.SlabBuddyMatchVariant.MatchForm.MatchFormCanvas.MatchText.GetGameObject().GetComponent<TextMeshPro>();
+                                Slab2Text = Calls.GameObjects.Map0.Logic.MatchSlabTwo.MatchSlab.SlabBuddyMatchVariant.MatchForm.MatchFormCanvas.MatchText.GetGameObject().GetComponent<TextMeshPro>();
+                            }
+                            else if (currentScene == "Map1")
+                            {
+                                MatchSlabOne = Calls.GameObjects.Map1.Logic.MatchSlabOne.MatchSlab.SlabBuddyMatchVariant.MatchForm.MatchFormCanvas.GetGameObject();
+                                Slab1Text = Calls.GameObjects.Map1.Logic.MatchSlabOne.MatchSlab.SlabBuddyMatchVariant.MatchForm.MatchFormCanvas.MatchText.GetGameObject().GetComponent<TextMeshPro>();
+                                Slab2Text = Calls.GameObjects.Map1.Logic.MatchSlabTwo.MatchSlab.SlabBuddyMatchVariant.MatchForm.MatchFormCanvas.MatchText.GetGameObject().GetComponent<TextMeshPro>();
+                            }
                         } catch { return; }
                         if (Calls.Players.IsHost())
                         {
@@ -249,7 +261,7 @@ namespace MatchInfo
                             matchInfoGameObject.transform.rotation = Quaternion.Euler(0, 90, 0);
                         }
                         player2Component.text = playerManager.AllPlayers[0].Data.GeneralData.PublicUsername;
-                        if (playerManager.AllPlayers[0].Data.GeneralData.InternalUsername == "5832566FD2375E31")
+                        if (playerManager.AllPlayers[0].Data.GeneralData.PlayFabMasterId == "5832566FD2375E31")
                         {
                             player2Component.text = "<#990099>U<#ff00ff>l<#ff66ff>v<#cc66ff>a<#9966ff>k<#6666ff>S<#3366ff>k<#6699ff>i<#809fff>l<#b3c6ff>l<#e6ecff>z";
                         }
@@ -257,7 +269,7 @@ namespace MatchInfo
                         if (playerManager.AllPlayers.Count > 1)
                         {
                             player1Component.text = playerManager.AllPlayers[1].Data.GeneralData.PublicUsername;
-                            if (playerManager.AllPlayers[1].Data.GeneralData.InternalUsername == "5832566FD2375E31")
+                            if (playerManager.AllPlayers[1].Data.GeneralData.PlayFabMasterId == "5832566FD2375E31")
                             {
                                 player1Component.text = "<#990099>U<#ff00ff>l<#ff66ff>v<#cc66ff>a<#9966ff>k<#6666ff>S<#3366ff>k<#6699ff>i<#809fff>l<#b3c6ff>l<#e6ecff>z";
                             }
@@ -265,15 +277,15 @@ namespace MatchInfo
                             bool playerFound = false;
                             for (int spot = 0; spot < fileText.Count; spot += 3)
                             {
-                                if (fileText[spot].Contains(playerManager.AllPlayers[1].Data.GeneralData.InternalUsername))
+                                if (fileText[spot].Contains(playerManager.AllPlayers[1].Data.GeneralData.PlayFabMasterId))
                                 {
-                                    if (fileText[spot] == playerManager.AllPlayers[1].Data.GeneralData.InternalUsername)
+                                    if (fileText[spot] == playerManager.AllPlayers[1].Data.GeneralData.PlayFabMasterId)
                                     {
                                         fileText[spot] += " - " + playerManager.AllPlayers[1].Data.GeneralData.PublicUsername;
                                     }
                                     else if (!fileText[spot].Contains(playerManager.AllPlayers[1].Data.GeneralData.PublicUsername))
                                     {
-                                        fileText[spot] = playerManager.AllPlayers[1].Data.GeneralData.InternalUsername + " - " + playerManager.AllPlayers[1].Data.GeneralData.PublicUsername;
+                                        fileText[spot] = playerManager.AllPlayers[1].Data.GeneralData.PlayFabMasterId + " - " + playerManager.AllPlayers[1].Data.GeneralData.PublicUsername;
                                     }
                                     playerFileSpot = spot;
                                     playerFound = true;
@@ -282,7 +294,7 @@ namespace MatchInfo
                             }
                             if (!playerFound)
                             {
-                                fileText.Add(playerManager.AllPlayers[1].Data.GeneralData.InternalUsername + " - " + playerManager.AllPlayers[1].Data.GeneralData.PublicUsername);
+                                fileText.Add(playerManager.AllPlayers[1].Data.GeneralData.PlayFabMasterId + " - " + playerManager.AllPlayers[1].Data.GeneralData.PublicUsername);
                                 fileText.Add("0");
                                 fileText.Add("0");
                                 playerFileSpot = fileText.Count - 3;
@@ -319,33 +331,19 @@ namespace MatchInfo
             {
                 try
                 {
-                    if ((!ranWinLoss) && (playerManager.AllPlayers.Count == 2) && (matchHandler.CurrentMatchPhase == MatchHandler.MatchPhase.WinnerDecided))
+                    if ((!ranWinLoss) && (playerManager.AllPlayers.Count == 2) && (MatchSlabOne.active))
                     {
                         bool won = false;
-                        string winOrLose = "";
-                        if (currentScene == "Map0")
+                        string winOrLose = "Unlocalized Entry!";
+                        if (Calls.Players.IsHost())
                         {
-                            if (Calls.Players.IsHost())
-                            {
-                                winOrLose = Calls.GameObjects.Map0.Logic.MatchSlabOne.MatchSlab.SlabBuddyMatchVariant.MatchForm.MatchFormCanvas.MatchText.GetGameObject().GetComponent<TextMeshProUGUI>().text;
-                            }
-                            else
-                            {
-                                winOrLose = Calls.GameObjects.Map0.Logic.MatchSlabTwo.MatchSlab.SlabBuddyMatchVariant.MatchForm.MatchFormCanvas.MatchText.GetGameObject().GetComponent<TextMeshProUGUI>().text;
-                            }
+                            winOrLose = Slab1Text.text;
                         }
-                        else if (currentScene == "Map1")
+                        else
                         {
-                            if (Calls.Players.IsHost())
-                            {
-                                winOrLose = Calls.GameObjects.Map1.Logic.MatchSlabOne.MatchSlab.SlabBuddyMatchVariant.MatchForm.MatchFormCanvas.MatchText.GetGameObject().GetComponent<TextMeshProUGUI>().text;
-                            }
-                            else
-                            {
-                                winOrLose = Calls.GameObjects.Map1.Logic.MatchSlabTwo.MatchSlab.SlabBuddyMatchVariant.MatchForm.MatchFormCanvas.MatchText.GetGameObject().GetComponent<TextMeshProUGUI>().text;
-                            }
+                            winOrLose = Slab2Text.text;
                         }
-                        if (winOrLose == "")
+                        if (winOrLose == "Unlocalized Entry!")
                         {
                             return;
                         }
@@ -372,7 +370,7 @@ namespace MatchInfo
                         ranWinLoss = true;
                         File.WriteAllLines($"{FILEPATH}\\{FILENAME}", fileText);
                     }
-                } catch { return; }
+                } catch (Exception e) { MelonLogger.Error("Opps: Host: " + Calls.Players.IsHost() + " | MatchActive: " + matchActive + " | Slab 1 Text: " + Slab1Text.text + " | Slab 2 Text: " + Slab2Text.text + " | Error: " + e); return; }
             }
         }
 

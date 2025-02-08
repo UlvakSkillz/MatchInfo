@@ -31,7 +31,6 @@ C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\Unity.RenderPipelines.
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\Il2CppSystem.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\Unity.RenderPipelines.Core.Runtime.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnityEngine.UIModule.dll
-C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnityEngine.SpatialTracking.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\Iced.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnityEngine.TextCoreFontEngineModule.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnityEngine.TextRenderingModule.dll
@@ -39,17 +38,13 @@ C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnityEngine.IMGUIModul
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\Il2CppSystem.Core.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnityEngine.AIModule.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnityEngine.AndroidJNIModule.dll
-C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnityEngine.ClothModule.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnityEngine.InputLegacyModule.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnityEngine.InputModule.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnityEngine.JSONSerializeModule.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnityEngine.Physics2DModule.dll
-C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnityEngine.SharedInternalsModule.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnityEngine.SubsystemsModule.dll
-C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnityEngine.TerrainModule.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnityEngine.TextCoreTextEngineModule.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnityEngine.UIElementsModule.dll
-C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnityEngine.UIElementsNativeModule.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnityEngine.UnityWebRequestModule.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\WebSocketDotNet.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\Unity.XR.Management.dll
@@ -61,7 +56,6 @@ C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\Il2CppSystem.Configura
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\Il2CppSystem.Xml.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\MelonLoader.xml
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\obj\Debug\MatchInfo.csproj.CoreCompileInputs.cache
-C:\Users\austi\source\repos\MatchInfo\MatchInfo\obj\Debug\MatchInfo.csproj.CopyComplete
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\obj\Debug\MatchInfo.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\obj\Debug\MatchInfo.pdb
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\obj\Debug\MatchInfo.csproj.AssemblyReference.cache
@@ -92,3 +86,11 @@ C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\Il2CppRUMBLE.Platform.
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\Il2Cppcom.rlabrecque.steamworks.net.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\System.Text.Json.dll
 C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\Microsoft.Diagnostics.NETCore.Client.dll
+C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\Il2CppLIV.dll
+C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\Il2CppInterop.Generator.dll
+C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\Il2CppInterop.HarmonySupport.dll
+C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\UnityEngine.AssetBundleModule.dll
+C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\MonoMod.Backports.dll
+C:\Users\austi\source\repos\MatchInfo\MatchInfo\bin\Debug\MonoMod.ILHelpers.dll
+C:\Users\austi\source\repos\MatchInfo\MatchInfo\obj\Debug\MatchInfo.csproj.Up2Date
