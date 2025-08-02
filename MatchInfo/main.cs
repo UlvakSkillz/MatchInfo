@@ -1,6 +1,5 @@
 ﻿using MelonLoader;
 using Il2CppRUMBLE.Managers;
-using Il2CppRUMBLE.Networking.MatchFlow;
 using RumbleModdingAPI;
 using System;
 using System.Collections;
@@ -331,16 +330,19 @@ namespace MatchInfo
             {
                 try
                 {
-                    if ((!ranWinLoss) && (playerManager.AllPlayers.Count == 2) && (MatchSlabOne.active))
+                    if ((!ranWinLoss) && (playerManager.AllPlayers.Count == 2) && (MatchSlabOne.activeSelf))
                     {
+                        //Log("Running Win/Loss");
                         bool won = false;
                         string winOrLose = "Unlocalized Entry!";
                         if (Calls.Players.IsHost())
                         {
+                            //Log("Is Host");
                             winOrLose = Slab1Text.text;
                         }
                         else
                         {
+                            //Log("Is Client");
                             winOrLose = Slab2Text.text;
                         }
                         if (winOrLose == "Unlocalized Entry!")
@@ -349,10 +351,12 @@ namespace MatchInfo
                         }
                         if (winOrLose == "Victory!")
                         {
+                            //Log("Win");
                             won = true;
                         }
                         else
                         {
+                            //Log("Lose");
                             won = false;
                         }
                         if (won)
